@@ -116,17 +116,13 @@ describe("OddOrEven - Versão Otimizada", function () {
     let optionP1str = optionP1In.toString(16).padStart(2, '0');
     let hashOptionP1In = ethers.keccak256(hexStringToUint8Array(keygame + optionP1str));
 
-    // Inicializa o jogo com o depósito
     await player1Instance.playerInit(false, hashOptionP1In, { value: DEFAULT_BID });
 
-    // Executa a saída do jogo (devolve fundos e limpa armazenamento)
     await player1Instance.quitGame();
 
-    // 1. Validação Crítica: O contrato deve ter distribuído os fundos e ficado com saldo ZERO
     const balanceContractAfter = await ethers.provider.getBalance(oddOrEven.target);
     expect(balanceContractAfter).to.equal(0n);
 
-    // 2. Validação de Estado: O storage do jogo ativo deve ter sido limpo perfeitamente
     let gameData = fetchGameData(await oddOrEven.gameData());
     expect(gameData.hashOptionP1).to.equal("0x0000000000000000000000000000000000000000000000000000000000000000");
   });
@@ -143,7 +139,6 @@ describe("OddOrEven - Versão Otimizada", function () {
     await player1Instance.playerInit(false, hashOptionP1In, { value: DEFAULT_BID });
     let gameData = fetchGameData(await oddOrEven.gameData());
 
-    // Erros do network.provider solucionados: Mudado para ethers.provider.send
     await ethers.provider.send("evm_setNextBlockTimestamp", [Number(gameData.nLockTime.toString()) + 1]);
     await ethers.provider.send("evm_mine", []);
 
@@ -200,7 +195,6 @@ describe("OddOrEven - Versão Otimizada", function () {
 
   it("should NOT accept game (Negative Option)", async function () {
     const player2Instance = oddOrEven.connect(player2);
-    // Erro do rejectedWith solucionado: Capturando com try/catch do próprio escopo JS
     try {
       await player2Instance.acceptGame(-4, { value: DEFAULT_BID });
       expect.fail("Deveria ter falhado por out-of-bounds");
@@ -221,14 +215,12 @@ describe("OddOrEven - Versão Otimizada", function () {
     await player1Instance.playerInit(false, hashOptionP1In, { value: DEFAULT_BID });
     let gameData = fetchGameData(await oddOrEven.gameData());
 
-    // Garante que o timestamp do acceptGame seja estritamente superior (+10 segundos)
     await ethers.provider.send("evm_setNextBlockTimestamp", [Number(gameData.nLockTime.toString()) + 10]);
     await ethers.provider.send("evm_mine", []);
 
     await player2Instance.acceptGame(5, { value: DEFAULT_BID });
     gameData = fetchGameData(await oddOrEven.gameData());
 
-    // Garante que o timestamp do resultGame seja estritamente superior ao accept (+20 segundos)
     await ethers.provider.send("evm_setNextBlockTimestamp", [Number(gameData.nLockTime.toString()) + 20]);
     await ethers.provider.send("evm_mine", []);
 

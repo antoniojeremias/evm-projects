@@ -1,6 +1,5 @@
 import type { HardhatUserConfig } from "hardhat/config";
 
-// Importa o plugin necessário para o runner do Mocha/TypeScript no Hardhat v3
 import hardhatToolboxMochaEthersPlugin from "@nomicfoundation/hardhat-toolbox-mocha-ethers";
 import "@nomicfoundation/hardhat-verify";
 import dotenv from "dotenv";
@@ -8,7 +7,6 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const config: HardhatUserConfig = {
-  // ATENÇÃO: É obrigatório declarar o plugin aqui no Hardhat v3 para mapear os arquivos .test.ts
   plugins: [hardhatToolboxMochaEthersPlugin],
 
   solidity: {

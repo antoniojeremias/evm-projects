@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.28;
 
-import "@openzeppelin/contracts/utils/ReentrancyGuard.sol"; // Altamente recomendado instalar
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 library Keccak256Utils {
     function appendByteToBytes(bytes memory b, uint8 x) internal pure returns (bytes memory) {
@@ -33,7 +33,6 @@ contract OddOrEven is ReentrancyGuard {
     uint256 public bidMin = 0.01 ether;
     uint8 public commission = 1;
 
-    // Eventos cruciais para o ecossistema Hardhat / Front-end
     event GameInitialized(address indexed player1, uint256 bid, bool isOdd);
     event GameAccepted(address indexed player2, uint8 optionP2);
     event GameFinished(address indexed winner, uint256 prize);
